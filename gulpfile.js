@@ -24,7 +24,7 @@ const gulp          = require('gulp' )
 const errorLog = err  => gp_notify({ message: err, sound: true, onLast: false } ).write( err );
 const notify   = msg  => gp_notify({ message: msg, onLast: true } );
 const log      = msg  => gutil.log( gutil.colors.blue( msg ) );
-const assets   = path => './assets' + path ;
+const assets   = path => './app/assets' + path ;
 
 /**
  * Big class
@@ -118,18 +118,19 @@ class Gulp {
 new Gulp({
 
     paths: {
-        sass : assets('/scss/**/*.scss'),
-        js   : assets('/js/src/app.js')
+        sass : assets('/stylesheets/app.scss'),
+        js   : assets('/javascripts/src/app.js')
     },
 
     // avoid dests watch
     watch : {
-        js         : assets('/js/src/**/*.js'),
-        browserify : assets('/js/src/**/*.js')
+        sass       : assets('/stylesheets/**/*.scss'),
+        js         : assets('/javascripts/src/**/*.js'),
+        browserify : assets('/javascripts/src/**/*.js')
     },
     
     dests : {
-        sass : assets('/css'),
-        js   : assets('/js/dist')
+        sass : assets('/stylesheets/dist'),
+        js   : assets('/javascripts/dist')
     }
 })
