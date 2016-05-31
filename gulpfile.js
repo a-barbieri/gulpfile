@@ -17,6 +17,8 @@ const gulp          = require('gulp' )
     , browserSync   = require('browser-sync').create()
     , fs            = require('fs')
     , uglify        = require('gulp-uglify')
+    , argv          = require('yargs').argv
+
 
 /**
  * Utils
@@ -36,8 +38,9 @@ class Gulp {
 
         this.proxy = proxy;
         this.paths = paths;
-        this.watch = watch;
+        this.check = watch;
         this.dests = dests;
+        this.p;
 
         this.tasks();    
     }
@@ -45,14 +48,14 @@ class Gulp {
     tasks() {
 
         gulp.task('default' , [ 'sass', 'js' ]);
-        gulp.task('watch'   , [ 'sass', 'js', 'watchTask' ]);
+        gulp.task('watch'   , [ 'sass', 'js', 'watch' ]);
         gulp.task('bs'      , [ 'sass', 'js', 'browserSync' ]);
 
         gulp.task('sass'        , this.sass        .bind(this));
         gulp.task('js'          , this.js          .bind(this));
         gulp.task('uglify'      , this.uglify      .bind(this));
         gulp.task('browserSync' , this.browserSync .bind(this));
-        gulp.task('watchTask'   , this.watchTask   .bind(this));
+        gulp.task('watch'       , this.watch       .bind(this));
 
     }
     
@@ -63,10 +66,10 @@ class Gulp {
             cascade  : false
         }
 
-        gulp.src( this.paths.sass )
+        gulp.src( argv.admin ? this.paths.sassAdmin : this.paths.sass )
             .pipe( sass().on( 'error', errorLog ) )
             .pipe( autoprefixer(prefix_conf) )
-            .pipe( gulp.dest( this.dests.sass ) )
+            .pipe( gulp.dest( argv.admin ? this.dests.sassAdmin : this.dests.sass ) )
             .pipe( browserSync.stream() )
             .pipe( notify( "Sass compiled" ) )
 
@@ -75,11 +78,11 @@ class Gulp {
     js() {
 
         const extensions = [ ".js", ".jsx", ".vertex", ".fragment" ]
-            , paths      = [ './node_modules', this.watch.browserify ]
+            , paths      = [ './node_modules', this.check.browserify ]
             , presets    = [ "es2015", "react" ]
             , stringExt  = [ ".vertex", ".fragment" ]
 
-        const br = browserify( this.paths.js, { extensions, paths });
+        const br = browserify( argv.admin ? this.paths.jsAdmin : this.paths.js, { extensions, paths });
 
         br.transform("babelify", { presets })
           .transform("stringify", { appliesTo: { includeExtensions: stringExt } })
@@ -87,14 +90,14 @@ class Gulp {
           .on( 'error', errorLog )
           .pipe( notify( "Scripts compiled" ) )
           .pipe( browserSync.stream() )
-          .pipe( fs.createWriteStream( this.dests.js + "/bundle.js") )
+          .pipe( fs.createWriteStream( argv.admin ? this.dests.jsAdmin : this.dests.js + "/bundle.js") )
     }
     
     uglify() {
     
-        gulp.src( this.dests.js + "/**/*.js" )
+        gulp.src( argv.admin ? this.dests.jsAdmin + "/**/*.js" : this.dests.js + "/**/*.js" )
             .pipe( uglify() )
-            .pipe( gulp.dest( this.dests.js + "/min" ) )
+            .pipe( gulp.dest( argv.admin ? this.dests.jsAdmin + "/min" : this.dests.js + "/min" ) )
             .pipe( notify('uglify') )
     
     }
@@ -106,9 +109,9 @@ class Gulp {
         browserSync.init( settings )
     }
 
-    watchTask() {
-        gulp.watch( this.watch.sass , ['sass']).on( 'change', browserSync.reload );
-        gulp.watch( this.watch.js   , ['js'  ]).on( 'change', browserSync.reload );
+    watch() {
+        gulp.watch( argv.admin ? this.check.sassAdmin : this.check.sass , ['sass']).on( 'change', browserSync.reload );
+        gulp.watch( argv.admin ? this.check.jsAdmin : this.check.js     , ['js'  ]).on( 'change', browserSync.reload );
     }
 }
 
@@ -118,19 +121,26 @@ class Gulp {
 new Gulp({
 
     paths: {
-        sass : assets('/stylesheets/app.scss'),
-        js   : assets('/javascripts/src/app.js')
+        sass      : assets('/stylesheets/app.scss'),
+        sassAdmin : assets('/stylesheets/admin.scss'),
+        js        : assets('/javascripts/app.js'),
+        jsAdmin   : assets('/javascripts/admin.js')
     },
 
     // avoid dests watch
     watch : {
-        sass       : assets('/stylesheets/**/*.scss'),
-        js         : assets('/javascripts/src/**/*.js'),
-        browserify : assets('/javascripts/src/**/*.js')
+        sass            : assets('/stylesheets/app/**/*.scss'),
+        sassAdmin       : assets('/stylesheets/admin/**/*.scss'),
+        jsAdmin         : assets('/javascripts/app/**/*.js'),
+        js              : assets('/javascripts/app/**/*.js'),
+        browserify      : assets('/javascripts/admin/**/*.js'),
+        browserifyAdmin : assets('/javascripts/admin/**/*.js')
     },
     
     dests : {
-        sass : assets('/stylesheets/dist'),
-        js   : assets('/javascripts/dist')
+        sass      : assets('/stylesheets/dist'),
+        sassAdmin : assets('/stylesheets/dist'),
+        js        : assets('/javascripts/dist'),
+        jsAdmin   : assets('/javascripts/dist')
     }
 })
