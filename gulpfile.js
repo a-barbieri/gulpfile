@@ -107,7 +107,7 @@ class Gulp {
     }
 
     watchTask() {
-        gulp.watch( this.paths.sass , ['sass']).on( 'change', browserSync.reload );
+        gulp.watch( this.watch.sass , ['sass']).on( 'change', browserSync.reload );
         gulp.watch( this.watch.js   , ['js'  ]).on( 'change', browserSync.reload );
     }
 }
