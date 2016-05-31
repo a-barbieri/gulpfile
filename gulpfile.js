@@ -34,13 +34,12 @@ const assets   = path => './app/assets' + path ;
 
 class Gulp {
 
-    constructor({ paths, watch, dests, proxy = "http://localhost:3000" }) {
+    constructor({ paths, check, dests, proxy = "http://localhost:3000" }) {
 
         this.proxy = proxy;
         this.paths = paths;
-        this.check = watch;
+        this.check = check;
         this.dests = dests;
-        this.p;
 
         this.tasks();    
     }
@@ -128,12 +127,12 @@ new Gulp({
     },
 
     // avoid dests watch
-    watch : {
+    check : {
         sass            : assets('/stylesheets/app/**/*.scss'),
         sassAdmin       : assets('/stylesheets/admin/**/*.scss'),
-        jsAdmin         : assets('/javascripts/app/**/*.js'),
         js              : assets('/javascripts/app/**/*.js'),
-        browserify      : assets('/javascripts/admin/**/*.js'),
+        jsAdmin         : assets('/javascripts/admin/**/*.js'),
+        browserify      : assets('/javascripts/app/**/*.js'),
         browserifyAdmin : assets('/javascripts/admin/**/*.js')
     },
     
