@@ -120,10 +120,10 @@ class Gulp {
 new Gulp({
 
     paths: {
-        sass      : assets('/stylesheets/app.scss'),
-        sassAdmin : assets('/stylesheets/admin.scss'),
-        js        : assets('/javascripts/app.js'),
-        jsAdmin   : assets('/javascripts/admin.js')
+        sass      : assets('/stylesheets/app/app.scss'),
+        sassAdmin : assets('/stylesheets/admin/admin.scss'),
+        js        : assets('/javascripts/app/app.js'),
+        jsAdmin   : assets('/javascripts/admin/admin.js')
     },
 
     // avoid dests watch
