@@ -89,7 +89,7 @@ class Gulp {
           .on( 'error', errorLog )
           .pipe( notify( "Scripts compiled" ) )
           .pipe( browserSync.stream() )
-          .pipe( fs.createWriteStream( argv.admin ? this.dests.jsAdmin : this.dests.js + "/bundle.js") )
+          .pipe( fs.createWriteStream( argv.admin ? this.dests.jsAdmin + "/admin.bundle.js" : this.dests.js + "/app.bundle.js") )
     }
     
     uglify() {
@@ -120,10 +120,10 @@ class Gulp {
 new Gulp({
 
     paths: {
-        sass      : assets('/stylesheets/app.scss'),
-        sassAdmin : assets('/stylesheets/admin.scss'),
-        js        : assets('/javascripts/app.js'),
-        jsAdmin   : assets('/javascripts/admin.js')
+        sass      : assets('/stylesheets/app/app.scss'),
+        sassAdmin : assets('/stylesheets/admin/admin.scss'),
+        js        : assets('/javascripts/app/app.js'),
+        jsAdmin   : assets('/javascripts/admin/admin.js')
     },
 
     // avoid dests watch
