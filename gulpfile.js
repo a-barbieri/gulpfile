@@ -17,8 +17,6 @@ const gulp          = require('gulp' )
     , browserSync   = require('browser-sync').create()
     , fs            = require('fs')
     , uglify        = require('gulp-uglify')
-    , argv          = require('yargs').argv
-
 
 /**
  * Utils
@@ -26,7 +24,7 @@ const gulp          = require('gulp' )
 const errorLog = err  => gp_notify({ message: err, sound: true, onLast: false } ).write( err );
 const notify   = msg  => gp_notify({ message: msg, onLast: true } );
 const log      = msg  => gutil.log( gutil.colors.blue( msg ) );
-const assets   = path => './app/assets' + path ;
+const assets   = path => './assets' + path ;
 
 /**
  * Big class
@@ -34,11 +32,11 @@ const assets   = path => './app/assets' + path ;
 
 class Gulp {
 
-    constructor({ paths, check, dests, proxy = "http://localhost:3000" }) {
+    constructor({ paths, watch, dests, proxy = "http://localhost:3000" }) {
 
         this.proxy = proxy;
         this.paths = paths;
-        this.check = check;
+        this.watch = watch;
         this.dests = dests;
 
         this.tasks();    
@@ -47,14 +45,14 @@ class Gulp {
     tasks() {
 
         gulp.task('default' , [ 'sass', 'js' ]);
-        gulp.task('watch'   , [ 'sass', 'js', 'watch' ]);
+        gulp.task('watch'   , [ 'sass', 'js', 'watchTask' ]);
         gulp.task('bs'      , [ 'sass', 'js', 'browserSync' ]);
 
         gulp.task('sass'        , this.sass        .bind(this));
         gulp.task('js'          , this.js          .bind(this));
         gulp.task('uglify'      , this.uglify      .bind(this));
         gulp.task('browserSync' , this.browserSync .bind(this));
-        gulp.task('watch'       , this.watch       .bind(this));
+        gulp.task('watchTask'   , this.watchTask   .bind(this));
 
     }
     
@@ -65,10 +63,10 @@ class Gulp {
             cascade  : false
         }
 
-        gulp.src( argv.admin ? this.paths.sassAdmin : this.paths.sass )
+        gulp.src( this.paths.sass )
             .pipe( sass().on( 'error', errorLog ) )
             .pipe( autoprefixer(prefix_conf) )
-            .pipe( gulp.dest( argv.admin ? this.dests.sassAdmin : this.dests.sass ) )
+            .pipe( gulp.dest( this.dests.sass ) )
             .pipe( browserSync.stream() )
             .pipe( notify( "Sass compiled" ) )
 
@@ -77,11 +75,11 @@ class Gulp {
     js() {
 
         const extensions = [ ".js", ".jsx", ".vertex", ".fragment" ]
-            , paths      = [ './node_modules', this.check.browserify ]
+            , paths      = [ './node_modules', this.watch.browserify ]
             , presets    = [ "es2015", "react" ]
             , stringExt  = [ ".vertex", ".fragment" ]
 
-        const br = browserify( argv.admin ? this.paths.jsAdmin : this.paths.js, { extensions, paths });
+        const br = browserify( this.paths.js, { extensions, paths });
 
         br.transform("babelify", { presets })
           .transform("stringify", { appliesTo: { includeExtensions: stringExt } })
@@ -89,14 +87,14 @@ class Gulp {
           .on( 'error', errorLog )
           .pipe( notify( "Scripts compiled" ) )
           .pipe( browserSync.stream() )
-          .pipe( fs.createWriteStream( argv.admin ? this.dests.jsAdmin : this.dests.js + "/bundle.js") )
+          .pipe( fs.createWriteStream( this.dests.js + "/bundle.js") )
     }
     
     uglify() {
     
-        gulp.src( argv.admin ? this.dests.jsAdmin + "/**/*.js" : this.dests.js + "/**/*.js" )
+        gulp.src( this.dests.js + "/**/*.js" )
             .pipe( uglify() )
-            .pipe( gulp.dest( argv.admin ? this.dests.jsAdmin + "/min" : this.dests.js + "/min" ) )
+            .pipe( gulp.dest( this.dests.js + "/min" ) )
             .pipe( notify('uglify') )
     
     }
@@ -108,9 +106,9 @@ class Gulp {
         browserSync.init( settings )
     }
 
-    watch() {
-        gulp.watch( argv.admin ? this.check.sassAdmin : this.check.sass , ['sass']).on( 'change', browserSync.reload );
-        gulp.watch( argv.admin ? this.check.jsAdmin : this.check.js     , ['js'  ]).on( 'change', browserSync.reload );
+    watchTask() {
+        gulp.watch( this.paths.sass , ['sass']).on( 'change', browserSync.reload );
+        gulp.watch( this.watch.js   , ['js'  ]).on( 'change', browserSync.reload );
     }
 }
 
@@ -120,26 +118,18 @@ class Gulp {
 new Gulp({
 
     paths: {
-        sass      : assets('/stylesheets/app.scss'),
-        sassAdmin : assets('/stylesheets/admin.scss'),
-        js        : assets('/javascripts/app.js'),
-        jsAdmin   : assets('/javascripts/admin.js')
+        sass : assets('/scss/**/*.scss'),
+        js   : assets('/js/src/app.js')
     },
 
     // avoid dests watch
-    check : {
-        sass            : assets('/stylesheets/app/**/*.scss'),
-        sassAdmin       : assets('/stylesheets/admin/**/*.scss'),
-        js              : assets('/javascripts/app/**/*.js'),
-        jsAdmin         : assets('/javascripts/admin/**/*.js'),
-        browserify      : assets('/javascripts/app/**/*.js'),
-        browserifyAdmin : assets('/javascripts/admin/**/*.js')
+    watch : {
+        js         : assets('/js/src/**/*.js'),
+        browserify : assets('/js/src/**/*.js')
     },
     
     dests : {
-        sass      : assets('/stylesheets/dist'),
-        sassAdmin : assets('/stylesheets/dist'),
-        js        : assets('/javascripts/dist'),
-        jsAdmin   : assets('/javascripts/dist')
+        sass : assets('/css'),
+        js   : assets('/js/dist')
     }
 })
