@@ -91,9 +91,8 @@ class Gulp {
             .pipe( autoprefixer(prefix_conf) )
             .pipe( gulp.dest( this.dests.sass[this.namespace] ) )
             .pipe( browserSync.stream() )
-            .pipe( notify( "Sass compiled" ) )
             .pipe( notify( function(file) {
-                return "Some file: " + file.relative;
+                return "Sass compiled: " + file.relative;
             }));
     }
 
@@ -107,12 +106,14 @@ class Gulp {
         const br = browserify( this.paths.js[this.namespace], { extensions, paths });
 
         br.transform("babelify", { presets })
-          .transform("stringify", { appliesTo: { includeExtensions: stringExt } })
-          .bundle()
-          .on( 'error', errorLog )
-          .pipe( notify( "Scripts compiled" ) )
-          .pipe( browserSync.stream() )
-          .pipe( fs.createWriteStream( this.dests.js[this.namespace] ) );
+            .transform("stringify", { appliesTo: { includeExtensions: stringExt } })
+            .bundle()
+            .on( 'error', errorLog )
+            .pipe( notify( function(file) {
+                return "Sass compiled: " + file.relative;
+            }))
+            .pipe( browserSync.stream() )
+            .pipe( fs.createWriteStream( this.dests.js[this.namespace] ) );
     }
     
     uglify() {
