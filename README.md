@@ -4,7 +4,7 @@ This gulpfile has been created to split `app` files from the `admin` ones. It ha
 
 It has been thought for Ruby on Rails 4.2.6 or later and Node 6.2.0 or later.
 
-# Required structure #
+### Required structure ###
 
 In order to work you need to have the following directory structure:
 
@@ -44,7 +44,7 @@ You can use the following commands:
 * `gulp watch`: watches stylesheet and javascript directories and executes `gulp sass` and `gulp js` on every file change
 * `gulp bs`: runs Browsersync in background and executes `gulp sass` and `gulp js` on every file change
 
-# Admin files #
+### Admin files ###
 
 If you want to keep your admin files separated you can create the same structure as before but within `admin` namespace. Refer to the following schema.
 
@@ -78,9 +78,11 @@ If you want to keep your admin files separated you can create the same structure
 
 In order to refer to `admin` namespace just add `--admin` at the end of the gulp command. For example `gulp watch --admin` or  simply `gulp --admin`.
 
-# Extra feature #
+### Extra feature ###
 
 You might want to have third namespace for a plugin that you use only on one specific view of your app. For example a script called `myPlugin`. The only thing you have to do is create the structure for it as you have done for admin and replacing admin with `myPlugin`. Then you'll be able to execute gulp commands using appendin `--extra myPlugin` to them. For example `gulp watch --extra myPlugin` or `gulp --extra myPlugin`.
 
-# NEXT FEATURES #
+----
+
+### NEXT FEATURES ###
 * Implement a command to create the structure automagically
