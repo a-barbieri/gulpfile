@@ -109,9 +109,7 @@ class Gulp {
             .transform("stringify", { appliesTo: { includeExtensions: stringExt } })
             .bundle()
             .on( 'error', errorLog )
-            .pipe( notify( function(file) {
-                return "Sass compiled: " + file.relative;
-            }))
+            .pipe( notify("Js compiled"))
             .pipe( browserSync.stream() )
             .pipe( fs.createWriteStream( this.dests.js[this.namespace] ) );
     }
