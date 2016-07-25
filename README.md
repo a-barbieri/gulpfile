@@ -7,13 +7,14 @@ The idea behind this is to split your `app` files from the `admin` ones. It has 
 It has been thought for Ruby on Rails 4.2.6 or later and Node 6.2.0 or later.
 
 What you can do:
-* Use gulp for your [application assets][app]
-* Use gulp for your [admin assets][admin]
-* Use gulp for your [plugin assets][extra]
+* Use gulp for your [application assets](app)
+* Use gulp for your [admin assets](admin)
+* Use gulp for your [plugin assets](extra)
 
 * * * 
 
-### [app]Required structure ###
+<a name='app'></a>
+### Required structure ###
 
 In order to setup properly copy/paste `gulpfile.js` and `package.json` in your project's root. To install gulp dependencies run the following commands from Terminal (or any command-line):
 ```
@@ -64,8 +65,8 @@ After your directory is correctly setup you can use the following commands:
 * `gulp bs`: it runs Browsersync in background and executes `gulp sass` and `gulp js` on every file change
 
 * * *
-
-###[admin] Admin files ###
+<a name='admin'></a>
+### Admin files ###
 
 If you want to keep your admin files separated you can create the same structure as before but within `admin` namespace. 
 To automagically setup the file you need run:
@@ -112,8 +113,8 @@ In order to refer to `admin` namespace just add `--admin` at the end of the gulp
 * `gulp bs --admin`: it runs Browsersync in background and executes `gulp sass --admin` and `gulp js --admin` on every file change
 
 * * *
-
-###[extra] Extra feature ###
+<a name='extra'></a>
+### Extra feature ###
 
 Always wanted to `gulp watch --extra myPlugin`?
 
