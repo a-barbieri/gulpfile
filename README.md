@@ -13,7 +13,7 @@ What you can do:
 
 * * * 
 
-###[app] Required structure ###
+### [app]Required structure ###
 
 In order to setup properly copy/paste `gulpfile.js` and `package.json` in your project's root. To install gulp dependencies run the following commands from Terminal (or any command-line):
 ```
