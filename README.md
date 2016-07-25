@@ -7,9 +7,9 @@ The idea behind this is to split your `app` files from the `admin` ones. It has 
 It has been thought for Ruby on Rails 4.2.6 or later and Node 6.2.0 or later.
 
 What you can do:
-* Use gulp for your [application assets](app)
-* Use gulp for your [admin assets](admin)
-* Use gulp for your [plugin assets](extra)
+* Use gulp for your [application assets](#app)
+* Use gulp for your [admin assets](#admin)
+* Use gulp for your [plugin assets](#extra)
 
 * * * 
 
