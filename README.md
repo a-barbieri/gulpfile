@@ -1,11 +1,18 @@
 ### GULPFILE ###
 
-This gulpfile has been created to split `app` files from the `admin` ones. It has also an `extra` feature that let's you create the namespace you want without modifing Gulpfile settings.
+This gulpfile preprocesses your Rails javascripts and stylesheets.
+
+The idea behind this is to split your `app` files from the `admin` ones. It has also an `extra` feature that let's you create the namespace for as many plugins as you want without modifing Gulpfile settings.
 
 It has been thought for Ruby on Rails 4.2.6 or later and Node 6.2.0 or later.
 
-* * * 
+What you can do:
+* Use gulp for your [application assets][app]
+* Use gulp for your [admin assets][admin]
+* Use gulp for your [plugin assets][extra]
 
+* * * 
+[app]
 ### Required structure ###
 
 In order to setup properly copy/paste `gulpfile.js` and `package.json` in your project's root. To install gulp dependencies run the following commands from Terminal (or any command-line):
@@ -57,7 +64,7 @@ After your directory is correctly setup you can use the following commands:
 * `gulp bs`: it runs Browsersync in background and executes `gulp sass` and `gulp js` on every file change
 
 * * *
-
+[admin]
 ### Admin files ###
 
 If you want to keep your admin files separated you can create the same structure as before but within `admin` namespace. 
@@ -107,7 +114,7 @@ In order to refer to `admin` namespace just add `--admin` at the end of the gulp
 * * *
 
 ### Extra feature ###
-
+[extra]
 Always wanted to `gulp watch --extra myPlugin`?
 
 You might want to have third namespace for a plugin that you use only on one specific view of your app. For example a script called `myPlugin` (it can be anything you want). The only thing you have to do is create the structure for it as you have done before with the setup task:
