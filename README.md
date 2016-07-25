@@ -12,8 +12,8 @@ What you can do:
 * Use gulp for your [plugin assets][extra]
 
 * * * 
-[app]
-### Required structure ###
+
+###[app] Required structure ###
 
 In order to setup properly copy/paste `gulpfile.js` and `package.json` in your project's root. To install gulp dependencies run the following commands from Terminal (or any command-line):
 ```
@@ -64,8 +64,8 @@ After your directory is correctly setup you can use the following commands:
 * `gulp bs`: it runs Browsersync in background and executes `gulp sass` and `gulp js` on every file change
 
 * * *
-[admin]
-### Admin files ###
+
+###[admin] Admin files ###
 
 If you want to keep your admin files separated you can create the same structure as before but within `admin` namespace. 
 To automagically setup the file you need run:
@@ -113,8 +113,8 @@ In order to refer to `admin` namespace just add `--admin` at the end of the gulp
 
 * * *
 
-### Extra feature ###
-[extra]
+###[extra] Extra feature ###
+
 Always wanted to `gulp watch --extra myPlugin`?
 
 You might want to have third namespace for a plugin that you use only on one specific view of your app. For example a script called `myPlugin` (it can be anything you want). The only thing you have to do is create the structure for it as you have done before with the setup task:
