@@ -4,6 +4,7 @@ This gulpfile has been created to split `app` files from the `admin` ones. It ha
 
 It has been thought for Ruby on Rails 4.2.6 or later and Node 6.2.0 or later.
 
+* * * 
 
 ### Required structure ###
 
@@ -55,6 +56,7 @@ After your directory is correctly setup you can use the following commands:
 * `gulp watch`: it watches stylesheet and javascript directories and executes `gulp sass` and `gulp js` on every file change
 * `gulp bs`: it runs Browsersync in background and executes `gulp sass` and `gulp js` on every file change
 
+* * *
 
 ### Admin files ###
 
@@ -102,6 +104,7 @@ In order to refer to `admin` namespace just add `--admin` at the end of the gulp
 * `gulp watch --admin`: it watches stylesheet and javascript directories and executes `gulp sass --admin` and `gulp js --admin` on every file change
 * `gulp bs --admin`: it runs Browsersync in background and executes `gulp sass --admin` and `gulp js --admin` on every file change
 
+* * *
 
 ### Extra feature ###
 
