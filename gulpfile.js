@@ -19,6 +19,7 @@ const gulp            = require('gulp' ),
         gutil         = require('gulp-util' ), 
         browserSync   = require('browser-sync').create(), 
         fs            = require('fs'), 
+        mkdirp        = require('mkdirp'), 
         uglify        = require('gulp-uglify'), 
         argv          = require('yargs').argv,
         expect        = require('gulp-expect-file');
@@ -46,17 +47,18 @@ class Gulp {
         else
             var NS = "app";
 
-        this.paths = { sass: {}, js: {} }
+        this.files = { sass: {}, js: {} }
         this.check = { sass: {}, js: {}, browserify: {} }
         this.dests = { sass: {}, js: {} } 
 
-        this.paths.sass[ NS ]       = assets(`/stylesheets/${NS}/${NS}.scss`);
-        this.paths.js[ NS ]         = assets(`/javascripts/${NS}/${NS}.js`);
+        this.files.sass[ NS ]       = assets(`/stylesheets/${NS}/${NS}.scss`);
+        this.files.js[ NS ]         = assets(`/javascripts/${NS}/${NS}.js`);
         this.check.sass[ NS ]       = assets(`/stylesheets/${NS}/**/*.scss`);
         this.check.js[ NS ]         = assets(`/javascripts/${NS}/**/*.js`);
         this.check.browserify[ NS ] = assets(`/javascripts/${NS}/**/*.js`);
         this.dests.sass[ NS ]       = assets('/stylesheets/dist');
         this.dests.js[ NS ]         = assets(`/javascripts/dist/${NS}.bundle.js`);
+
 
         this.namespace = NS;
         this.proxy = proxy;
@@ -70,12 +72,56 @@ class Gulp {
         gulp.task('watch'   , [ 'sass', 'js', 'watch' ]);
         gulp.task('bs'      , [ 'sass', 'js', 'browserSync' ]);
 
+        gulp.task('setup'       , this.setup       .bind(this));
         gulp.task('sass'        , this.sass        .bind(this));
         gulp.task('js'          , this.js          .bind(this));
         gulp.task('uglify'      , this.uglify      .bind(this));
         gulp.task('browserSync' , this.browserSync .bind(this));
         gulp.task('watch'       , this.watch       .bind(this));
 
+    }
+
+    setup() {
+
+        this.setupFolders('javascripts', 'js');
+        this.setupFolders('stylesheets', 'scss');
+
+    }
+
+    setupFolders ( folder, ext ) {
+
+        var dir  = assets( `/${ folder }` ) + '/' + this.namespace;
+        var railsPipelineFile   = dir + '.' + ext;
+        var gulpTargetFile      = dir + '/' + this.namespace + '.' + ext;
+
+        mkdirp( dir, ( err ) => {
+
+            if ( err != null ) { console.log( err ); }
+            else { 
+                this.setupFiles( gulpTargetFile );
+                this.setupFiles( railsPipelineFile );
+            }
+        });
+
+    }
+
+    setupFiles ( file ) {
+
+        fs.access( file, fs.F_OK, ( err ) => {
+
+            if ( err != null  ) { 
+
+                fs.writeFile( file, '', ( err ) => {
+
+                    if ( err != null ) { console.log( err ); }
+                    else { console.log(`${ file } has been created`); }
+                });
+            }
+            else { 
+
+                console.log(`The following file has already been setup: ${ file }`);
+            }
+        });
     }
     
     sass() {
@@ -85,8 +131,8 @@ class Gulp {
             cascade  : false
         };
 
-        gulp.src( this.paths.sass[this.namespace] )
-            .pipe( expect( { errorOnFailure: true }, this.paths.sass[this.namespace] ).on( 'error', errorLog ) )
+        gulp.src( this.files.sass[this.namespace] )
+            .pipe( expect( { errorOnFailure: true }, this.files.sass[this.namespace] ).on( 'error', errorLog ) )
             .pipe( sass().on( 'error', errorLog ) )
             .pipe( autoprefixer(prefix_conf) )
             .pipe( gulp.dest( this.dests.sass[this.namespace] ) )
@@ -103,7 +149,7 @@ class Gulp {
                 presets    = [ "es2015", "react" ], 
                 stringExt  = [ ".vertex", ".fragment" ];
 
-        const br = browserify( this.paths.js[this.namespace], { extensions, paths });
+        const br = browserify( this.files.js[this.namespace], { extensions, paths });
 
         br.transform("babelify", { presets })
             .transform("stringify", { appliesTo: { includeExtensions: stringExt } })
