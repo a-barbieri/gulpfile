@@ -88,21 +88,36 @@ class Gulp {
 
     }
 
-    setupFolders ( folder, ext ) {
+    setupFolders ( folder, extension ) {
 
-        var dir  = assets( `/${ folder }` ) + '/' + this.namespace;
-        var railsPipelineFile   = dir + '.' + ext;
-        var gulpTargetFile      = dir + '/' + this.namespace + '.' + ext;
+        var directory           = assets( `/${ folder }` ),
+            namespace           = this.namespace;
 
-        mkdirp( dir, ( err ) => {
+        var pipelineIndex       = `${ directory }/${ namespace }.${ extension }`,
+            pipelineDestination = `${ directory }/dist/.${ namespace }.bundle.${ extension }`,
+            gulpTargetFile      = `${ directory }/${ namespace }.${ extension }`;
+
+
+        // Create pipeline file
+        this.setupFiles( pipelineIndex );
+
+        // Create main folder for current namespace
+        mkdirp( `${ directory }/${ namespace }`, ( err ) => {
 
             if ( err != null ) { console.log( err ); }
             else { 
                 this.setupFiles( gulpTargetFile );
-                this.setupFiles( railsPipelineFile );
             }
         });
 
+        // Create main folder for current namespace
+        mkdirp( `${ directory }/dist`, ( err ) => {
+
+            if ( err != null ) { console.log( err ); }
+            else { 
+                this.setupFiles( pipelineDestination );
+            }
+        });
     }
 
     setupFiles ( file ) {
