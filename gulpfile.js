@@ -96,7 +96,7 @@ class Gulp {
 
         var pipelineIndex       = `${ directory }/${ namespace }.${ extension }`,
             pipelineDestination = `${ directory }/dist/${ namespace }.bundle.${ extension }`,
-            gulpTargetFile      = `${ directory }/${ namespace }.${ extension }`;
+            gulpTargetFile      = `${ directory }/${ namespace }/${ namespace }.${ extension }`;
 
 
         // Create pipeline file
@@ -104,39 +104,27 @@ class Gulp {
 
         // Create main folder for current namespace
         mkdirp( `${ directory }/${ namespace }`, ( err ) => {
-
             if ( err != null ) { console.log( err ); }
-            else { 
-                this.setupFiles( gulpTargetFile );
-            }
+            else { this.setupFiles( gulpTargetFile ); }
         });
 
         // Create main folder for current namespace
         mkdirp( `${ directory }/dist`, ( err ) => {
-
             if ( err != null ) { console.log( err ); }
-            else { 
-                this.setupFiles( pipelineDestination );
-            }
+            else { this.setupFiles( pipelineDestination ); }
         });
     }
 
     setupFiles ( file ) {
-
+        
         fs.access( file, fs.F_OK, ( err ) => {
-
             if ( err != null  ) { 
-
                 fs.writeFile( file, '', ( err ) => {
-
                     if ( err != null ) { console.log( err ); }
                     else { console.log(`${ file } has been created`); }
                 });
             }
-            else { 
-
-                console.log(`The following file has already been setup: ${ file }`);
-            }
+            else { console.log(`The following file has already been setup: ${ file }`); }
         });
     }
     
@@ -151,6 +139,9 @@ class Gulp {
             .pipe( expect( { errorOnFailure: true }, this.files.sass[this.namespace] ).on( 'error', errorLog ) )
             .pipe( sass().on( 'error', errorLog ) )
             .pipe( autoprefixer(prefix_conf) )
+            .pipe( gulp.rename( function( name ) { 
+                name.basename += ".bundle"; 
+            }))
             .pipe( gulp.dest( this.dests.sass[this.namespace] ) )
             .pipe( browserSync.stream() )
             .pipe( notify( function(file) {
