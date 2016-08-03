@@ -24,18 +24,19 @@ const gulp            = require('gulp' ),
         argv          = require('yargs').argv,
         expect        = require('gulp-expect-file');
 
+
 /**
  * Utils
  */
 const errorLog = (err)  => gp_notify( { message: err, sound: true, onLast: false } ).write( err );
 const notify   = (msg)  => gp_notify( { message: msg, onLast: true } );
 const log      = (msg)  => gutil.log( gutil.colors.blue( msg ) );
-const assets   = (path) => 'app/assets' + path ;
+const assets   = (path) => 'app/assets' + path;
+
 
 /**
  * Big class
  */
-
 class Gulp {
 
     constructor( proxy = "http://localhost:3000" ) {
@@ -94,7 +95,7 @@ class Gulp {
             namespace           = this.namespace;
 
         var pipelineIndex       = `${ directory }/${ namespace }.${ extension }`,
-            pipelineDestination = `${ directory }/dist/.${ namespace }.bundle.${ extension }`,
+            pipelineDestination = `${ directory }/dist/${ namespace }.bundle.${ extension }`,
             gulpTargetFile      = `${ directory }/${ namespace }.${ extension }`;
 
 
