@@ -20,6 +20,7 @@ const gulp            = require('gulp' ),
         browserSync   = require('browser-sync').create(), 
         fs            = require('fs'), 
         mkdirp        = require('mkdirp'), 
+        rename        = require('gulp-rename'), 
         uglify        = require('gulp-uglify'), 
         argv          = require('yargs').argv,
         expect        = require('gulp-expect-file');
