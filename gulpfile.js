@@ -140,7 +140,7 @@ class Gulp {
             .pipe( expect( { errorOnFailure: true }, this.files.sass[this.namespace] ).on( 'error', errorLog ) )
             .pipe( sass().on( 'error', errorLog ) )
             .pipe( autoprefixer(prefix_conf) )
-            .pipe( gulp.rename( function( name ) { 
+            .pipe( rename( function( name ) { 
                 name.basename += ".bundle"; 
             }))
             .pipe( gulp.dest( this.dests.sass[this.namespace] ) )
